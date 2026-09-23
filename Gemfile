@@ -31,8 +31,12 @@ group :development, :test do
     rails_version = CURRENT_RAILS_VERSION if rails_version == "current"
     gem "rails", "~> #{rails_version}.0"
 
-    # Remove this constraint once Rails ships a version that supports JSON 3
-    gem "json", "< 3"
+    if Gem::Version.new(rails_version) < Gem::Version.new("8.1")
+      # JSON 3 rejects quirks_mode in older Rails; Rails 8.1 removed it.
+      gem "json", "< 3"
+    else
+      gem "json", "< 4"
+    end
   end
 
   gem "sqlite3"
